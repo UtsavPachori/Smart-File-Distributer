@@ -9,7 +9,15 @@ class DuplicateViewer:
         self.master = tk.Toplevel(master) 
         self.master.title("Duplicate Files")
         self.master.geometry("750x450")
-        self.master.iconbitmap("favicon.ico")
+        def resource_path(relative_path):
+            try:
+                base_path = sys._MEIPASS
+            except Exception:
+                base_path = os.path.abspath(".")
+
+            return os.path.join(base_path, relative_path)
+        
+        self.root.iconbitmap(resource_path("favicon.ico"))
 
         self.duplicate_groups = duplicate_groups
         self.wasted_space = wasted_space
