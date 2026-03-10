@@ -16,7 +16,7 @@ Tkinter
 
 How to run:
 1. Install Python
-2. 2. Run SmartFileOrganizer.py
+2. Run SmartFileOrganizer.py
 
 Author:
 Utsav Pachori
