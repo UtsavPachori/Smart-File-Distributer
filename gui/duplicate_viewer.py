@@ -177,8 +177,6 @@ class DuplicateViewer:
 
             except Exception as e:
                 print(f"Failed to delete {path}: {e}")
-            except Exception as e:
-                print(f"Failed to delete {path}: {e}")
 
         messagebox.showinfo(
             "Deleted", 
