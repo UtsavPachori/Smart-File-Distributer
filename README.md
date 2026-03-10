@@ -2,7 +2,8 @@
 
 A desktop utility that automatically organizes files and removes duplicates.
 
-Features:
+## Features:
+
 - Automatic file organization
 - Duplicate file detection
 - Safe duplicate removal
@@ -10,15 +11,7 @@ Features:
 - Progress tracking
 - Download folder cleaner
 
-Built With:
-Python
-Tkinter
-
-How to run:
-1. Install Python
-2. Run SmartFileOrganizer.py
-
-Screenshots:
+## Screenshots:
 
 
 
@@ -26,5 +19,16 @@ Screenshots:
 <img width="1013" height="661" alt="image" src="https://github.com/user-attachments/assets/59cf1efc-a3bd-4e47-ad31-1a36d784f19e" />
 <img width="967" height="662" alt="image" src="https://github.com/user-attachments/assets/2e000677-385f-4f32-b20b-ada62efefabb" />
 
-Author:
+## Download:
+Download the latest release from the Releases section. 
+
+## Built With:
+- Python
+- Tkinter
+
+## How to run:
+1. Install Python
+2. Run SmartFileOrganizer.py
+
+## Author:
 Utsav Pachori
