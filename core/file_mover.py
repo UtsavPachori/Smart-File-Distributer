@@ -56,7 +56,7 @@ def move_file(file_path, base_folder):
     destination_folder = get_destination(extension, base_folder)
 
     if not destination_folder:
-        return "Skipped (unsupported type)"
+        return "Skipped (unsupported type)", None
     
     destination_folder.mkdir(exist_ok=True)
     

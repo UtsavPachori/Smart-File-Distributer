@@ -152,13 +152,13 @@ class AppGUI:
     def organize_files(self):
         scan_option = self.scan_folders.get()
 
-        self.status_label.config(text="Scanning files...")
+        self.root.after(0, lambda: self.status_label.config(text="Scanning files..."))
         self.root.update()
 
         files = scan_folder(self.selected_folder, scan_option)
 
         if not files:
-            self.status_label.config(text="No files found.")
+            self.root.after(0, lambda: self.status_label.config(text="No files found."))
             self.set_ui_state("normal")
             return
 
@@ -168,54 +168,53 @@ class AppGUI:
 
         for file_path in files:
             ext = file_path.suffix.lower()
-            stats[ext] += 1
             destination = get_destination(ext, self.selected_folder)
 
             if destination:
+                stats[ext] += 1
                 preview_lines.append(f"{file_path.name} → {destination.name}")
 
-                preview_text = "\n".join(preview_lines[:20])
+        preview_text = "\n".join(preview_lines[:20])
 
-                if len(preview_lines) > 20:
-                    preview_text += "\n..."
+        if len(preview_lines) > 20:
+            preview_text += "\n..."
 
-                confirm = messagebox.askyesno(
-                    "Preview Changes",
-                    f"Files to be organized:\n\n{preview_text}\n\nProceed?"
-                )
+        confirm = messagebox.askyesno(
+            "Preview Changes",
+            f"Files to be organized:\n\n{preview_text}\n\nProceed?"
+        )
 
-                if not confirm:
-                    self.status_label.config(text="Operation cancelled.")
-                    self.set_ui_state("normal")
-                    return
-
-                total_files = len(files)
-
-                self.progress["maximum"] = total_files
-                self.progress["value"] = 0
-
-                for index, file_path in enumerate(files, start=1):
-                    result, new_location = move_file(file_path, self.selected_folder)
-                    self.move_history.append((new_location, file_path))
-                    message = f"{index}/{total_files} : {file_path.name} → {result}"
-                    self.root.after(0, lambda m=message: self.status_label.config(text=m))
-                    self.progress["value"] = index
-                    self.root.update()
-
-                self.root.after(0, lambda: self.status_label.config(text="Organization Completed."))
-
-                summary_lines = [f"{ext}: {count}" for ext, count in stats.items()]
-                summary_text = "\n".join(summary_lines)
-
-                self.root.after(0, self.update_result(summary_text))
-
-                os.startfile(self.selected_folder)
-
-                self.set_ui_state("normal")
-
+        if not confirm:
+            self.root.after(0, lambda: self.status_label.config(text="Operation cancelled."))
             self.set_ui_state("normal")
-            self.root.after(0, lambda: self.status_label.config(text="No Files Found To Organize."))
             return
+
+        total_files = len([f for f in files if get_destination(f.suffix.lower(), self.selected_folder)])
+
+        self.progress["maximum"] = total_files
+        self.progress["value"] = 0
+
+        for index, file_path in enumerate(files, start=1):
+            result, new_location = move_file(file_path, self.selected_folder)
+            if new_location: 
+                self.move_history.append((new_location, file_path))
+            message = f"{index}/{total_files} : {file_path.name} → {result}"
+            self.root.after(0, lambda m=message: self.status_label.config(text=m))
+            self.progress["value"] = index
+            self.root.update()
+
+        self.root.after(0, lambda: self.status_label.config(text="Organization Completed."))
+
+        summary_lines = [f"{ext}: {count}" for ext, count in stats.items()]
+        summary_text = "\n".join(summary_lines)
+
+        self.root.after(0, lambda: self.update_result(summary_text))
+
+        if os.path.exists(self.selected_folder):
+            os.startfile(self.selected_folder)
+
+        self.set_ui_state("normal")
+        return
 
     def scan_duplicates(self):
         self.set_ui_state("disabled")
@@ -256,8 +255,9 @@ class AppGUI:
 
         if duplicate_groups:
             self.root.after(0, lambda: DuplicateViewer(self.root, duplicate_groups, wasted_space))
-
-        self.set_ui_state("normal")
+            self.set_ui_state("normal")
+        else: 
+            self.set_ui_state("normal")
 
     def update_result(self, result_text):
         self.result_box.config(state="normal")
@@ -281,12 +281,13 @@ class AppGUI:
                 print(f"Failed to undo move: {e}")
 
         self.move_history.clear()
-        os.startfile(self.selected_folder)
+        if os.path.exists(self.selected_folder):
+            os.startfile(self.selected_folder)
 
         messagebox.showinfo("Undo", "Last organization undone.")
 
     def drop_folder(self, event):
-        folder = event.data.strip("{}")
+        folder = self.root.tk.splitlist(event.data)[0]
 
         self.selected_folder = folder
         self.status_label.config(text=f"Dropped Folder:\n{folder}")
