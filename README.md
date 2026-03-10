@@ -14,5 +14,9 @@ Built With:
 Python
 Tkinter
 
+How to run:
+1. Install Python
+2. 2. Run SmartFileOrganizer.py
+
 Author:
 Utsav Pachori
