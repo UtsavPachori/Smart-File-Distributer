@@ -18,7 +18,7 @@ class DuplicateViewer:
 
             return os.path.join(base_path, relative_path)
         
-        self.root.iconbitmap(resource_path("favicon.ico"))
+        self.master.iconbitmap(resource_path("favicon.ico"))
 
         self.duplicate_groups = duplicate_groups
         self.wasted_space = wasted_space
