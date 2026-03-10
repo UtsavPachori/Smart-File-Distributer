@@ -7,6 +7,7 @@ from collections import defaultdict
 from pathlib import Path
 import shutil
 import os
+import sys
 from tkinterdnd2 import DND_FILES, TkinterDnD
 from core.scanner import scan_folder
 from core.file_mover import move_file, get_destination
@@ -21,7 +22,16 @@ class AppGUI:
         self.root = TkinterDnD.Tk()
         self.root.title("Smart File Organizer - by Utsav")
         self.root.geometry("650x500")
-        self.root.iconbitmap("favicon.ico")
+
+        def resource_path(relative_path):
+            try:
+                base_path = sys._MEIPASS
+            except Exception:
+                base_path = os.path.abspath(".")
+
+            return os.path.join(base_path, relative_path)
+        
+        self.root.iconbitmap(resource_path("favicon.ico"))
 
         self.selected_folder = None
         self.move_history = []
