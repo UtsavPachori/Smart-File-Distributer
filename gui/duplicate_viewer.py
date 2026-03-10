@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 from pathlib import Path
 import os
+import sys
 from utils.size_formatter import format_size
 
 class DuplicateViewer:
